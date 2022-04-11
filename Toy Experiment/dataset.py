@@ -98,6 +98,5 @@ def sample(rot=70.0, tran=1.0, sep=-0.1, nsample=500, noise=0.05):
     pretext_t = torch.from_numpy(a_t).float()
 
     corr = (label_s == pretext_s).sum() / label_s.size(0)
-    print("Label agreement between the main and ssl tasks: {:.2f}".format(corr))
 
     return (input_s, label_s, pretext_s), (input_t, label_t, pretext_t), corr

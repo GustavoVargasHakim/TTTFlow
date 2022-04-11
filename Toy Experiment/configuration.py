@@ -27,3 +27,5 @@ def argparser():
     #Architecture
     parser.add_argument('--batch-norm', type=bool, default=False, help='Use batch norm after linear layers')
     parser.add_argument('--flow', type=str, default='affine', help='Type of flow to use', choices=('affine', 'cdf'))
+
+    return parser.parse_args()
