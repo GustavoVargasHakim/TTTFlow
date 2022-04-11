@@ -76,6 +76,3 @@ def plot_loss(loss, name, figdir):
     plt.savefig(figdir, bbox_inches='tight')
     plt.show()
     plt.close()
-
-
-
