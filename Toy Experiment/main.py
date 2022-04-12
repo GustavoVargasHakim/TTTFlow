@@ -35,13 +35,17 @@ def experiment(args):
         #net = model2.net_affine(norm=True).to(device)
         net = model.net_affine(b_size=X_s.shape[0], norm=True).to(device)
         add = '_affine'
+    if args.flow == 'affine_IN':
+        #net = model2.net_affine(norm=True).to(device)
+        net = model.net_affine_IN(b_size=X_s.shape[0], norm=True).to(device)
+        add = '_affine_IN'
 
     #Training
     acc, train_loss, train_cls_loss, train_uns_loss = algorithms.train(device, net, train_loader, args)
-    utils.plot_loss(train_cls_loss, 'Training Classification loss', 'plots/train_cls_loss' + add + '.png')
-    utils.plot_loss(train_uns_loss, 'Training Unsupervised loss', 'plots/train_uns_loss' + add + '.png')
-    utils.plot_loss(train_loss, 'Training Total loss', 'plots/train_loss' + add + '.png')
-    utils.plot_loss(acc, 'Training Accuracy', 'plots/train_acc' + add + '.png')
+    utils.plot_loss(train_cls_loss, 'Training Classification loss', 'plots/' + args.flow +'/train_cls_loss' + add + '.png')
+    utils.plot_loss(train_uns_loss, 'Training Unsupervised loss', 'plots/' + args.flow +'/train_uns_loss' + add + '.png')
+    utils.plot_loss(train_loss, 'Training Total loss', 'plots/' + args.flow +'/train_loss' + add + '.png')
+    utils.plot_loss(acc, 'Training Accuracy', 'plots/' + args.flow +'/train_acc' + add + '.png')
 
     #Testing
     if args.flow == 'cdf':
@@ -51,22 +55,26 @@ def experiment(args):
         #net = model2.net_affine(norm=True).to(device)
         net = model.net_affine(b_size=X_s.shape[0], freeze=True, norm=True).to(device)
         checkpoint = torch.load('results_affine.pt')
+    if args.flow == 'affine_IN':
+        #net = model2.net_affine(norm=True).to(device)
+        net = model.net_affine_IN(b_size=X_s.shape[0], norm=True).to(device)
+        checkpoint = torch.load('results_affine_IN.pt')
     net.load_state_dict(checkpoint['model_state_dict'])
     net.eval()
     test_acc = algorithms.test(device, net, test_loader)
     print('Test accuracy after training:', test_acc)
 
-    visualization.plot_prediction(X_s, y_s, copy.deepcopy(net).cpu(), 3, 'plots/DecisionBoundary/Training/db' + add + '.png')
-    visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3, 'plots/DecisionBoundary/Testing/db' + add + '.png')
+    visualization.plot_prediction(X_s, y_s, copy.deepcopy(net).cpu(), 3, 'plots/' + args.flow +'/DecisionBoundary/Training/db' + add + '.png')
+    visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3, 'plots/' + args.flow +'/DecisionBoundary/Testing/db' + add + '.png')
 
     #Test Time Adaptation
     acc, loss, net_bkp = algorithms.adapt(device, net, test_loader, args)
-    utils.plot_loss(loss, 'Testing Unsupervised loss', 'plots/test_uns_loss' + add + '.png')
-    utils.plot_loss(acc, 'Testing Accuracy', 'plots/train_acc' + add + '.png')
+    utils.plot_loss(loss, 'Testing Unsupervised loss', 'plots/' + args.flow +'/test_uns_loss' + add + '.png')
+    utils.plot_loss(acc, 'Testing Accuracy', 'plots/' + args.flow +'/test_acc' + add + '.png')
 
     net.load_state_dict(net_bkp)
     visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3,
-                                   'plots/DecisionBoundary/Testing/Final_db' + add + '.png')
+                                   'plots/' + args.flow +'/DecisionBoundary/Testing/Final_db' + add + '.png')
 
 
 if __name__ == '__main__':

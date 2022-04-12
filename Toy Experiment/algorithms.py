@@ -19,10 +19,14 @@ def train(device, net, dataloader, args):
     elif args.flow == 'affine':
         criterion_uns = utils.affine_likelihood
         add='_affine'
+    elif args.flow == 'affine_IN':
+        criterion_uns = utils.affine_likelihood
+        add='_affine_IN'
     criterion_cls = nn.BCEWithLogitsLoss()
     beta = args.beta
 
     #Training loop
+    acc_best = 0
     acc = utils.AverageMeter(device, args.epochs)
     loss_cls_avg = utils.AverageMeter(device, args.epochs)
     loss_uns_avg = utils.AverageMeter(device, args.epochs)
@@ -44,7 +48,8 @@ def train(device, net, dataloader, args):
             loss.backward()
             optimizer.step()
 
-        acc.append(utils.accuracy(out, y))
+        accuracy = utils.accuracy(out,y)
+        acc.append(accuracy)
         loss_cls_avg.append(loss_cls)
         loss_uns_avg.append(loss_uns)
         loss_avg.append(loss)
@@ -55,9 +60,10 @@ def train(device, net, dataloader, args):
             tqdm.write('Total loss: {}'.format(loss_avg.avg))
             tqdm.write('Accuracy: {}'.format(acc.avg))
             visualization.plot_prediction(dataloader.dataset.X, dataloader.dataset.y, copy.deepcopy(net).cpu(), 3,
-                                           'plots/DecisionBoundary/Training/db' + str(epoch) + add + '.png')
-
-    torch.save({'model_state_dict': net.state_dict()}, 'results'+add+'.pt')
+                                           'plots/'+args.flow+'/DecisionBoundary/Training/db' + str(epoch) + add + '.png')
+        if accuracy > acc_best:
+                acc_best = accuracy
+                torch.save({'model_state_dict': net.state_dict()}, 'results'+add+'.pt')
 
     return acc, loss_avg, loss_cls_avg, loss_uns_avg
 
@@ -86,11 +92,14 @@ def adapt(device, net, dataloader, args):
     elif args.flow == 'affine':
         criterion_uns = utils.affine_likelihood
         add='_affine'
+    elif args.flow == 'affine_IN':
+        criterion_uns = utils.affine_likelihood
+        add='_affine_IN'
 
-    acc = utils.AverageMeter(device, args.epochs)
-    loss_avg = utils.AverageMeter(device, args.epochs)
+    acc = utils.AverageMeter(device, args.test_epochs)
+    loss_avg = utils.AverageMeter(device, args.test_epochs)
     acc_best = 0
-    for epoch in tqdm(range(args.epochs)):
+    for epoch in tqdm(range(args.test_epochs)):
         net.train()
         for i, data in enumerate(dataloader, 0):
             x = data['input'].to(device, non_blocking=True)
@@ -114,7 +123,7 @@ def adapt(device, net, dataloader, args):
             tqdm.write('Unsupervised loss: {}'.format(loss_avg.avg))
             tqdm.write('Accuracy: {}'.format(acc.avg))
             visualization.plot_prediction(dataloader.dataset.X, dataloader.dataset.y, copy.deepcopy(net).cpu(), 3,
-                                           'plots/DecisionBoundary/Testing/db' + str(epoch) + add + '.png')
+                                           'plots/'+args.flow+'/DecisionBoundary/Testing/db' + str(epoch) + add + '.png')
         if accuracy > acc_best:
                 acc_best = accuracy
                 net_bkp = copy.deepcopy(net.state_dict())

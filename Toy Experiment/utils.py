@@ -74,5 +74,5 @@ def plot_loss(loss, name, figdir):
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.savefig(figdir, bbox_inches='tight')
-    plt.show()
+    #plt.show()
     plt.close()
