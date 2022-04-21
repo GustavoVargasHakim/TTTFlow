@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+from torch.distributions import MultivariateNormal, Normal
 '''Planar Flow
 Computes the following transformation:
             
@@ -25,7 +25,7 @@ class PlanarTransform(nn.Module):
 
         affine = torch.mm(x, self.w.T) + self.b
         #Computing transformation
-        z = self.u * self.h(affine)
+        z = x + self.u * self.h(affine)
 
         #Computing log of Jacobian determinant
         derivative = (1 - self.h(affine)**2)*self.w
@@ -57,7 +57,15 @@ class PlanarFlow(nn.Module):
 
         return z, log_det_J
 
-print(x.shape)
-flow = PlanarFlow(48)
+x = torch.rand((128, 4096))
+flow = PlanarFlow(4096)
 z, log_det = flow(x)
-print(z.shape)
+
+target = MultivariateNormal(torch.zeros(z.shape[1]), torch.eye(z.shape[1]))
+target2 = Normal(torch.zeros(z.shape[1]), torch.ones(z.shape[1]))
+log_likelihood_per_dim = target.log_prob(z) + log_det
+log_likelihood = log_likelihood_per_dim.sum(1)
+print(log_likelihood)
+
+log_likelihood_per_dim = target2.log_prob(z) + log_det
+log_likelihood = log_likelihood_per_dim
