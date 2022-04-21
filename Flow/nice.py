@@ -69,7 +69,7 @@ class Scaling(nn.Module):
 
 
 class NiceFlow(nn.Module):
-    def __init__(self, coupling, in_out_dim, mid_dim, hidden, mask_config):
+    def __init__(self, coupling, in_out_dim, mid_dim, hidden, mask_config=0):
         '''
         :param coupling: Number of coupling layers
         :param in_out_dim: Input/output dimensions

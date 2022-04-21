@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torch.distributions import MultivariateNormal, Normal
+from torch.distributions import Normal
 '''Planar Flow
 Computes the following transformation:
             
@@ -57,15 +57,12 @@ class PlanarFlow(nn.Module):
 
         return z, log_det_J
 
+'''
 x = torch.rand((128, 4096))
 flow = PlanarFlow(4096)
 z, log_det = flow(x)
 
-target = MultivariateNormal(torch.zeros(z.shape[1]), torch.eye(z.shape[1]))
-target2 = Normal(torch.zeros(z.shape[1]), torch.ones(z.shape[1]))
+target = Normal(torch.zeros(z.shape[1]), torch.ones(z.shape[1]))
 log_likelihood_per_dim = target.log_prob(z) + log_det
 log_likelihood = log_likelihood_per_dim.sum(1)
-print(log_likelihood)
-
-log_likelihood_per_dim = target2.log_prob(z) + log_det
-log_likelihood = log_likelihood_per_dim
+'''
