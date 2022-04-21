@@ -26,6 +26,20 @@ def argparser():
 
     #Architecture
     parser.add_argument('--batch-norm', type=bool, default=False, help='Use batch norm after linear layers')
-    parser.add_argument('--flow', type=str, default='glow', help='Type of flow to use', choices=('glow', 'nvp'))
+    parser.add_argument('--flow', type=str, default='glow', help='Type of flow to use', choices=('planar', 'nice', 'nvp'))
+    parser.add_argument('--num-transforms', type=int, default=3, help='Number of transforms to compose')
+
+    #NICE
+    parser.add_argument('--hidden', type=int, default=6, help='Number of hidden layers inside MLP')
+    parser.add_argument('--mid-dim', type=int, default=128, help='Output size of medium layers inside MLP')
+    parser.add_argument('--batch-norm', type=bool, default=False, help='Use batch norm after linear layers')
+
+    #RealNVP
+    parser.add_argument('--res-blocks', type=int, default=2, help='Number of resblocks to use inside coupling layers')
+    parser.add_argument('--dim', type=int, default=3, help='Number of output channels in middle operations in resblocks')
+    parser.add_argument('--bottleneck', type=bool, default=True, help='Option to use bottleneck architecture in resblocks')
+    parser.add_argument('--batch-norm', type=bool, default=False, help='Use batch norm after linear layers')
+    parser.add_argument('--masking', type=str, default='checkerboard', help='Type of masking', choices=('checkerboard', 'channels'))
+
 
     return parser.parse_args()
