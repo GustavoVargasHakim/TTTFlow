@@ -64,13 +64,9 @@ def experiment(args):
     visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3, 'plots/' + args.flow +'/DecisionBoundary/Testing/db' + add + '.png', args)
 
     #Test Time Adaptation
-    acc, loss, net_bkp = algorithms.adapt(device, net, test_loader, args)
+    acc, loss = algorithms.adapt(device, net, test_loader, args)
     utils.plot_loss(loss, 'Testing Unsupervised loss', 'plots/' + args.flow +'/test_uns_loss' + add + '.png')
     utils.plot_loss(acc, 'Testing Accuracy', 'plots/' + args.flow +'/test_acc' + add + '.png')
-
-    net.load_state_dict(net_bkp)
-    visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3,
-                                   'plots/' + args.flow +'/DecisionBoundary/Testing/Final_db' + add + '.png', args)
 
 
 if __name__ == '__main__':

@@ -127,8 +127,5 @@ def adapt(device, net, dataloader, args):
             tqdm.write('Accuracy: {}'.format(acc.avg))
             visualization.plot_prediction(dataloader.dataset.X, dataloader.dataset.y, copy.deepcopy(net).cpu(), 3,
                                            'plots/'+args.flow+'/DecisionBoundary/Testing/db' + str(epoch) + add + '.png', args)
-        if loss > best_loss:
-                best_loss = loss
-                net_bkp = copy.deepcopy(net.state_dict())
 
-    return acc, loss_avg, net_bkp
+    return acc, loss_avg
