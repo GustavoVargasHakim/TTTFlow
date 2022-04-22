@@ -25,7 +25,7 @@ def argparser():
     parser.add_argument('--test-opt', type=str, default='Adam', help='Test time optimizer', choices=('Adam', 'sgd'))
 
     #Architecture
-    parser.add_argument('--batch-norm', type=bool, default=False, help='Use batch norm after linear layers')
-    parser.add_argument('--flow', type=str, default='cdf', help='Type of flow to use', choices=('affine', 'cdf'))
+    parser.add_argument('--batch-norm', type=bool, default=True, help='Use batch norm after linear layers')
+    parser.add_argument('--flow', type=str, default='affine', help='Type of flow to use', choices=('affine', 'cdf'))
 
     return parser.parse_args()

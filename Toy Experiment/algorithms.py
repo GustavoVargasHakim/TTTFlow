@@ -35,7 +35,8 @@ def train(device, net, dataloader, args):
     for epoch in tqdm(range(args.epochs)):
         for i, data in enumerate(dataloader, 0):
             x = data['input'].to(device, non_blocking=True)
-            x = torch.nn.functional.normalize(x)
+            if args.flow != 'cdf':
+                x = torch.nn.functional.normalize(x)
             y = data['label'].to(device, non_blocking=True)
 
             out, (z, dz_by_dx) = net(x)
@@ -60,18 +61,19 @@ def train(device, net, dataloader, args):
             tqdm.write('Total loss: {}'.format(loss_avg.avg))
             tqdm.write('Accuracy: {}'.format(acc.avg))
             visualization.plot_prediction(dataloader.dataset.X, dataloader.dataset.y, copy.deepcopy(net).cpu(), 3,
-                                           'plots/'+args.flow+'/DecisionBoundary/Training/db' + str(epoch) + add + '.png')
+                                           'plots/'+args.flow+'/DecisionBoundary/Training/db' + str(epoch) + add + '.png', args)
         if accuracy > acc_best:
                 acc_best = accuracy
                 torch.save({'model_state_dict': net.state_dict()}, 'results'+add+'.pt')
 
     return acc, loss_avg, loss_cls_avg, loss_uns_avg
 
-def test(device, net, dataloader):
+def test(device, net, dataloader, args):
     accuracy = 0
     for i, data in enumerate(dataloader, 0):
         x = data['input'].to(device, non_blocking=True)
-        x = torch.nn.functional.normalize(x)
+        if args.flow != 'cdf':
+            x = torch.nn.functional.normalize(x)
         y = data['label'].to(device, non_blocking=True)
 
         out, _ = net(x)
@@ -98,12 +100,13 @@ def adapt(device, net, dataloader, args):
 
     acc = utils.AverageMeter(device, args.test_epochs)
     loss_avg = utils.AverageMeter(device, args.test_epochs)
-    acc_best = 0
+    best_loss = 10e8
     for epoch in tqdm(range(args.test_epochs)):
         net.train()
         for i, data in enumerate(dataloader, 0):
             x = data['input'].to(device, non_blocking=True)
-            x = torch.nn.functional.normalize(x)
+            if args.flow != 'cdf':
+                x = torch.nn.functional.normalize(x)
             y = data['label'].to(device, non_blocking=True)
 
             out, (z, dz_by_dx) = net(x)
@@ -123,9 +126,9 @@ def adapt(device, net, dataloader, args):
             tqdm.write('Unsupervised loss: {}'.format(loss_avg.avg))
             tqdm.write('Accuracy: {}'.format(acc.avg))
             visualization.plot_prediction(dataloader.dataset.X, dataloader.dataset.y, copy.deepcopy(net).cpu(), 3,
-                                           'plots/'+args.flow+'/DecisionBoundary/Testing/db' + str(epoch) + add + '.png')
-        if accuracy > acc_best:
-                acc_best = accuracy
+                                           'plots/'+args.flow+'/DecisionBoundary/Testing/db' + str(epoch) + add + '.png', args)
+        if loss > best_loss:
+                best_loss = loss
                 net_bkp = copy.deepcopy(net.state_dict())
 
     return acc, loss_avg, net_bkp

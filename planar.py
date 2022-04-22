@@ -14,9 +14,9 @@ class PlanarTransform(nn.Module):
         :param shape: shape of the input (1 x dim)
         '''
         super().__init__()
-        self.w = nn.Parameter(torch.randn(1,shape).normal_(0, 0.1))
-        self.b = nn.Parameter(torch.randn(1,shape).normal_(0, 0.1))
-        self.u = nn.Parameter(torch.randn(1,shape).normal_(0, 0.1))
+        self.w = nn.Parameter(torch.randn(shape).normal_(0, 0.1))
+        self.b = nn.Parameter(torch.randn(shape).normal_(0, 0.1))
+        self.u = nn.Parameter(torch.randn(shape).normal_(0, 0.1))
         self.h = torch.tanh
 
     def forward(self, x):
@@ -49,10 +49,13 @@ class PlanarFlow(nn.Module):
         self.layers = [PlanarTransform(shape) for _ in range(K)]
         self.model = nn.Sequential(*self.layers)
 
-    def forward(self, z):
+    def forward(self, x):
         log_det_J = 0
+
+        z = x
         for layer in self.layers:
             z, log_det = layer(z)
+            print(log_det.shape)
             log_det_J += log_det
 
-        return z, log_det_J.T
+        return z, log_det_J

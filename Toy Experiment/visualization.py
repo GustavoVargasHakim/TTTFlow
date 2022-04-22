@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
 
-def plot_prediction(x, y, net, scale, figname):
+def plot_prediction(x, y, net, scale, figname, args):
     """plot decision boundary"""
     net.test = True
     fig = plt.figure()
@@ -14,7 +14,8 @@ def plot_prediction(x, y, net, scale, figname):
     x0, x1 = np.meshgrid(x0s, x1s)
     xe = np.c_[x0.ravel(), x1.ravel()]
     xe = torch.from_numpy(xe).float()
-    xe = torch.nn.functional.normalize(xe)
+    if args.flow != 'cdf':
+        xe = torch.nn.functional.normalize(xe)
     net.eval()
     with torch.no_grad():
         y_pred = net(xe)

@@ -29,15 +29,13 @@ def experiment(args):
 
     #Model
     if args.flow == 'cdf':
-        net = model.net_cdf(n_components=3, norm=True).to(device)
+        net = model.net_cdf(n_components=3, norm=args.batch_norm).to(device)
         add = '_cdf'
     if args.flow == 'affine':
-        #net = model2.net_affine(norm=True).to(device)
-        net = model.net_affine(b_size=X_s.shape[0], norm=True).to(device)
+        net = model.net_affine(b_size=X_s.shape[0], norm=args.batch_norm).to(device)
         add = '_affine'
     if args.flow == 'affine_IN':
-        #net = model2.net_affine(norm=True).to(device)
-        net = model.net_affine_IN(b_size=X_s.shape[0], norm=True).to(device)
+        net = model.net_affine_IN(b_size=X_s.shape[0], norm=args.batch_norm).to(device)
         add = '_affine_IN'
 
     #Training
@@ -49,23 +47,21 @@ def experiment(args):
 
     #Testing
     if args.flow == 'cdf':
-        net = model.net_cdf(n_components=3, freeze=True, norm=True).to(device)
+        net = model.net_cdf(n_components=3, freeze=True, norm=args.batch_norm).to(device)
         checkpoint = torch.load('results_cdf.pt')
     if args.flow == 'affine':
-        #net = model2.net_affine(norm=True).to(device)
-        net = model.net_affine(b_size=X_s.shape[0], freeze=True, norm=True).to(device)
+        net = model.net_affine(b_size=X_s.shape[0], freeze=True, norm=args.batch_norm).to(device)
         checkpoint = torch.load('results_affine.pt')
     if args.flow == 'affine_IN':
-        #net = model2.net_affine(norm=True).to(device)
-        net = model.net_affine_IN(b_size=X_s.shape[0], norm=True).to(device)
+        net = model.net_affine_IN(b_size=X_s.shape[0], norm=args.batch_norm).to(device)
         checkpoint = torch.load('results_affine_IN.pt')
     net.load_state_dict(checkpoint['model_state_dict'])
     net.eval()
-    test_acc = algorithms.test(device, net, test_loader)
+    test_acc = algorithms.test(device, net, test_loader, args)
     print('Test accuracy after training:', test_acc)
 
-    visualization.plot_prediction(X_s, y_s, copy.deepcopy(net).cpu(), 3, 'plots/' + args.flow +'/DecisionBoundary/Training/db' + add + '.png')
-    visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3, 'plots/' + args.flow +'/DecisionBoundary/Testing/db' + add + '.png')
+    visualization.plot_prediction(X_s, y_s, copy.deepcopy(net).cpu(), 3, 'plots/' + args.flow +'/DecisionBoundary/Training/db' + add + '.png', args)
+    visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3, 'plots/' + args.flow +'/DecisionBoundary/Testing/db' + add + '.png', args)
 
     #Test Time Adaptation
     acc, loss, net_bkp = algorithms.adapt(device, net, test_loader, args)
@@ -74,7 +70,7 @@ def experiment(args):
 
     net.load_state_dict(net_bkp)
     visualization.plot_prediction(X_t, y_t, copy.deepcopy(net).cpu(), 3,
-                                   'plots/' + args.flow +'/DecisionBoundary/Testing/Final_db' + add + '.png')
+                                   'plots/' + args.flow +'/DecisionBoundary/Testing/Final_db' + add + '.png', args)
 
 
 if __name__ == '__main__':
