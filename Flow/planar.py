@@ -17,7 +17,7 @@ class PlanarTransform(nn.Module):
         self.w = nn.Parameter(torch.randn(1,shape).normal_(0, 0.1))
         self.b = nn.Parameter(torch.randn(1,shape).normal_(0, 0.1))
         self.u = nn.Parameter(torch.randn(1,shape).normal_(0, 0.1))
-        self.h = torch.tanh
+        self.h = lambda x: 2*x#torch.tanh
 
     def forward(self, x):
         if torch.mm(self.u, self.w.T) < -1:
@@ -32,7 +32,7 @@ class PlanarTransform(nn.Module):
         abs_det = (1 + torch.mm(self.u, derivative.T)).abs()
         log_det = torch.log(1e-4 + abs_det)
 
-        return z, log_det
+        return z, log_det.T
 
     def get_u_hat(self):
         wtu = torch.mm(self.u, self.w.T)
@@ -55,7 +55,7 @@ class PlanarFlow(nn.Module):
             z, log_det = layer(z)
             log_det_J += log_det
 
-        return z, log_det_J
+        return z, log_det_J.T
 
 '''
 x = torch.rand((128, 4096))
