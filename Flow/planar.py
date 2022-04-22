@@ -35,7 +35,7 @@ class PlanarTransform(nn.Module):
         abs_det = (1 + torch.mm(self.u, derivative.T)).abs()
         log_det = torch.log(1e-4 + abs_det)
 
-        return z, log_det.T
+        return z, log_det
 
     def get_u_hat(self):
         wtu = torch.mm(self.u, self.w.T)
