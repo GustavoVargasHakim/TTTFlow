@@ -3,6 +3,10 @@
 Official reposiroty of the WACV 2023 paper "TTTFlow: Unsupervised Test-Time Training with Normalizing Flows", by David Osowiechi, Gustavo A. Vargas Hakim, Mehrdad Noori, Milad Cheraghalikhani, Ismail Ben Ayed, and Christian Desrosiers.
 This work was greatly inspired by the code in [TTT](https://github.com/yueatsprograms/ttt_cifar_release).
 
+TTTFlow uses a Normalizing Flow on top of source-trained feature extractor in order to learn a mapping from the source distribution to a Gaussian distribution. At test-time, the Normalizing Flow is used as a domain shift detector to modify the weights of the feature extractor according to the new domain, and perform classification. 
+
+![Diagram](https://github.com/GustavoVargasHakim/TTTFlow/blob/master/TTTFlow.png)
+
 Please follow the following instructions in order to reproduce the experiments.
 
 ## Setup 
