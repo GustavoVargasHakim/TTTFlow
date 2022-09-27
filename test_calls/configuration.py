@@ -4,7 +4,7 @@ def argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', default='cifar10')
     parser.add_argument('--level', default=5, type=int, help='Severity level in corruption')
-    parser.add_argument('--corruption', default='gaussian_noise')
+    parser.add_argument('--corruption', default='cifar_new')
     parser.add_argument('--dataroot', default='/path/to/dataset/datasets')
     parser.add_argument('--shared', default='layer2')
     ########################################################################

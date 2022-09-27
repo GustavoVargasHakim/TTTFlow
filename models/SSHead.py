@@ -23,23 +23,23 @@ class ExtractorHead(nn.Module):
 		else:
 			return self.head(x)
 
-def extractor_from_layer1(net, args):
+def extractor_from_layer1(net):
 	layers = [net.conv1,  net.bn1, nn.ReLU(inplace=True), net.layer1]
 	return nn.Sequential(*layers)
 
-def extractor_from_layer3(net, args):
+def extractor_from_layer3(net):
 	layers = [net.conv1, net.bn1, nn.ReLU(inplace=True), net.layer1, net.layer2, net.layer3]#, net.bn, net.relu, net.avgpool]
 	return nn.Sequential(*layers)
 
-def extractor_from_layer2(net, args):
+def extractor_from_layer2(net):
 	layers = [net.conv1,  net.bn1, nn.ReLU(inplace=True), net.layer1, net.layer2]
 	return nn.Sequential(*layers)
 
-def extractor_from_layer4(net, args):
+def extractor_from_layer4(net):
 	layers = [net.conv1, net.bn1, nn.ReLU(inplace=True), net.layer1, net.layer2, net.layer3, net.layer4]
 	return nn.Sequential(*layers)
 
-def head_on_layer2(net, flow, args):
+def head_on_layer2(flow):
 	from models.realnvp import RealNVP
 	head = []
 	if flow == 'realnvp':

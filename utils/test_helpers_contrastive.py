@@ -34,19 +34,19 @@ def build_model(args, state_dict=None):
         net.load_state_dict(net_dict)
 
     if args.shared == 'layer1':
-        ext = extractor_from_layer1(net.ext, args)
+        ext = extractor_from_layer1(net.ext)
         head = RealNVP(256, 256, 512, 2, True, 32, 'checkerboard')
 
     elif args.shared == 'layer2':
-        ext = extractor_from_layer2(net.ext, args)
+        ext = extractor_from_layer2(net.ext)
         head = nn.Sequential(RealNVP(512, 512, 1024, 2, True, 16, 'checkerboard'))
 
     elif args.shared == 'layer3':
-        ext = extractor_from_layer3(net.ext, args)
+        ext = extractor_from_layer3(net.ext)
         head = RealNVP(1024, 1024, 2048, 2, True, 8, 'checkerboard')
 
     elif args.shared == 'layer4':
-        ext = extractor_from_layer4(net.ext, args)
+        ext = extractor_from_layer4(net.ext)
         head = RealNVP(2048, 2048, 4096, 2, True, 4, 'checkerboard')
 
     ssh = ExtractorHead(ext, head).cuda()
