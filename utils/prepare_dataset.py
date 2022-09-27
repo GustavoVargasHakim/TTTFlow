@@ -5,12 +5,6 @@ import torchvision.transforms as transforms
 import torchvision.transforms.functional as TF 
 import numpy as np
 
-class MyRotation:
-        def __init__(self, angles):
-                self.angles = angles
-        def __call__(self, x, i):
-                return TF.rotate(x, self.angles[i])
-
 NORM = ((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
 te_transforms = transforms.Compose([transforms.ToTensor(),
 									transforms.Normalize(*NORM)])
