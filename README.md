@@ -51,12 +51,14 @@ At test-time, we utilize the files inside the folder "test_calls", with its own 
 
 If you found this repository, or its related paper useful for your research, you can cite this work as:
 
-```@inproceedings{TTTFlow2023,
+```
+@inproceedings{TTTFlow2023,
   title={TTTFlow: Unsupervised Test-Time Training with Normalizing Flow},\\
   author={David Osowiechi and Gustavo A. Vargas Hakim and Milad Cheraghalikhani and Mehrdad Noori and Ismail Ben Ayed and Christian Desrosiers},
   booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
   pages={},
   month={January},
   year={2023}
-}```
+}
+```
 
