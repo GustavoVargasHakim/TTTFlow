@@ -46,3 +46,10 @@ At test-time, we utilize the files inside the folder "test_calls", with its own 
 - `test_adapt.py`: to adapt to an individual corruption from CIFAR-10-C, or CIFAR-10-new. Change the parameter `--corruption` inside the `configuration.py` file to `cifar-new` or to any of the 15 corruption names in CIFAR-10-C (please see the file `prepare_dataset.py` inside folder "utils" for more information on the names).
 
 - `test_adapt_all.py`: to adapt to all the corruptions from CIFAR-10-C in a row. It also evaluates the method for different number of iterations (3, 5, 10, 20), but you can change the values in line 71. The execution for this experiment takes considerably longer than only using `test_adapt.py`, and the execution time grows with the increasing number of iterations. 
+
+## Citation
+
+If you found this repository, or its related paper useful for your research, you can cite this work as:
+
+`Citation to be added`
+
