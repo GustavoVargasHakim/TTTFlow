@@ -41,7 +41,7 @@ The file `main.py` can be used for training the ResNet-50 model on CIFAR-10 clas
 
 ## Test-time Adaptation
 
-At test-time, we utilize the files inside the folder "test_calls_", with its own configuration file. You can use two files:
+At test-time, we utilize the files inside the folder "test_calls", with its own configuration file. You can use two files:
 
 - `test_adapt.py`: to adapt to an individual corruption from CIFAR-10-C, or CIFAR-10-new. Change the parameter `--corruption` inside the `configuration.py` file to `cifar-new` or to any of the 15 corruption names in CIFAR-10-C (please see the file `prepare_dataset.py` inside folder "utils" for more information on the names).
 
