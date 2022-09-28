@@ -14,7 +14,7 @@ Please follow the following instructions in order to reproduce the experiments.
 ### Requirements
 
 This project was developed using Python 3.8.10, PyTorch 1.11.2 and CUDA 11.1. Please visit the requirements
-file "requirements.txt", or use thw following command:
+file "requirements.txt", or use the following command:
 
 `pip install -r requirements.txt`
 
