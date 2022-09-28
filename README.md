@@ -53,7 +53,7 @@ If you found this repository, or its related paper useful for your research, you
 
 ```
 @inproceedings{TTTFlow2023,
-  title={TTTFlow: Unsupervised Test-Time Training with Normalizing Flow},\\
+  title={TTTFlow: Unsupervised Test-Time Training with Normalizing Flow},
   author={David Osowiechi and Gustavo A. Vargas Hakim and Milad Cheraghalikhani and Mehrdad Noori and Ismail Ben Ayed and Christian Desrosiers},
   booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
   pages={},
